@@ -7,9 +7,10 @@ swmixer.init(samplerate=44100, chunksize=1024, stereo=True)
 swmixer.start()
 
 sndMain = swmixer.Sound("Sounds/RelaxedBackgroundShorter.wav")
-snd1 = swmixer.Sound("Sounds/Owls.wav")
-snd2 = swmixer.Sound("Sounds/Crickets.wav")
-snd3 = swmixer.Sound("test.wav")
+snd1 = swmixer.Sound("Sounds/Eagle.wav")
+snd2 = swmixer.Sound("Sounds/Crow1.wav")
+snd3 = swmixer.Sound("Sounds/Lightning.wav")
+snd4 = swmixer.Sound("test.wav")
 
 sndArray = [snd1, snd2, snd3]
 canPlay = 0
@@ -37,17 +38,16 @@ while True:
     print "ValueArray: ", valueArray, "Can Play: ", canPlay, "Total Value: ", totalValue
     # Sound is allowed, run the scripts from here
     if canPlay == 1:
-        if totalValue > 2:
+        if totalValue > 5:
             snd2.play(volume=0.3)
             time.sleep(10)
             snd1.play(volume=0.2)
             time.sleep(10)
-        elif totalValue > 0:
+        elif totalValue > 2:
             snd1.play(volume=0.7)
             time.sleep(10)
         time.sleep(1)
         print "LOL"
-        snd2.play(volume=0.7)
         time.sleep(5)
 
     # Sound is not allowed
