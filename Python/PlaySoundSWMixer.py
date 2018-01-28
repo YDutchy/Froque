@@ -58,11 +58,11 @@ while True:
         time.sleep(5)
 
     # Sound is not allowed
-    else:
-        if 2 not in valueArray:
-            count += 1
-            if count > 5:
-                canPlay = 0
-                count = 0
-                mainSound.stop()
+    #else:
+    if 2 not in valueArray:
+        count += 1
+        if count > 5:
+            canPlay = 0
+            count = 0
+            mainSound.stop()
         time.sleep(5)

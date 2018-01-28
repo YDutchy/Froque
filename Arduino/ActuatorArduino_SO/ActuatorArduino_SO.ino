@@ -4,6 +4,8 @@
 #define NUM_LEDS    76
 #define NUM_RINGS   15
 #define NUM_WIND    8
+#define BRIGHTNESS  50
+#define FRAMES_PER_SECOND 30
 
 CRGB leds[NUM_RINGS + 2][NUM_LEDS]; // +2 so we can precalculate things
 
@@ -348,6 +350,7 @@ void ShowAnimation() {
   }
 
   FastLED.show();
+  FastLED.delay(1000 / FRAMES_PER_SECOND);
 
 }
 
@@ -465,14 +468,20 @@ void animation0(int LEDindex) {
   
 }
 
-void animation1(int LEDindex) {
-  fill_solid(leds[LEDindex], NUM_LEDS, CRGB( 0, 228, 75));
+bool gReverseDirection = false;
+#define COOLING 50
+#define SPARKING 140
 
+void animation1(int LEDindex) {
+   
+  fill_gradient( leds[LEDindex], 0, CHSV(120, 255, 255), 11, CHSV(200, 255, 255), SHORTEST_HUES);
+  fill_gradient( leds[LEDindex], 12, CHSV(120, 255, 255), 35, CHSV(200, 255, 255), SHORTEST_HUES);
+  fill_gradient( leds[LEDindex], 36, CHSV(120, 255, 255), 75, CHSV(200, 255, 255), SHORTEST_HUES);
 }
 
 void animation2(int LEDindex) {
   //fill_rainbow( leds[LEDindex], 12, GlobalVars.brightness + 15, 15 );
-  //fill_rainbow( leds[LEDindex] + 12, 24, GlobalVars.brightness + 7, 9 );
+  //fill_rainbow( leds[LEDi ndex] + 12, 24, GlobalVars.brightness + 7, 9 );
   //fill_rainbow( leds[LEDindex] + 36, 40, GlobalVars.brightness, 6 );
   for (int i = 0; i < 76; i++) {
     leds[LEDindex][i] = leds[16][i];
