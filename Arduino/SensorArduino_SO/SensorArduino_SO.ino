@@ -86,13 +86,10 @@ void loop() {
             break;
           }
           digitalWrite(mapingPins[maping[j][i]]+2, LOW);
-        }
-        
+        }        
       }
-      
     }
   }
-  
 }
 
 void measure() {
