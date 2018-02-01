@@ -44,6 +44,8 @@ const long personalTimeout = 100;
 char debugMsg[50];
 int value = 0;
 
+bool debug =  false;
+
 const byte dataPins[4] = {D1, D2, D3, D4}; // connect to {2, 3, 4, 5} on acturator Arduino
 bool dataState[4];
 
@@ -92,76 +94,89 @@ void callback(char* topic, byte* payload, unsigned int length) {
 
   String inString = "";
 
-  Serial.print("Message arrived [ID: ");
+  Serial.print("Message arrived: [ ");
   for (int i = 0; i < length; i++) {
     Serial.print((char)payload[i]);
 
-    if (isDigit(payload[i])) {
+    //if (isDigit(payload[i])) {
       inString += (char)payload[i];
-    }
+    //}
   }
 
   Serial.println("]");
 
-  snprintf(debugMsg, 75, "Recieved ID:%ld", inString.toInt());
-  client.publish("polysenseDebug", debugMsg);
+  if ( strcmp(topic, "polysense") == 0) {
+    snprintf(debugMsg, 75, "Recieved ID:%ld", inString.toInt());
+    client.publish("polysenseDebug", debugMsg);
 
-  if (dataState[0] == false) {
-    dataState[0] = true;
-    lastChange = millis();
+    if (dataState[0] == false) {
+      dataState[0] = true;
+      lastChange = millis();
 
-    switch (inString.toInt()) {
-      case 6:
-        dataState[1] = false;
-        dataState[2] = false;
-        dataState[3] = false;
-        break;
-      case 8:
-        dataState[1] = true;
-        dataState[2] = false;
-        dataState[3] = false;
-        break;
-      case 14:
-        dataState[1] = false;
-        dataState[2] = true;
-        dataState[3] = false;
-        break;
-      case 22:
-        dataState[1] = true;
-        dataState[2] = true;
-        dataState[3] = false;
-        break;
-      case 49:
-        dataState[1] = false;
-        dataState[2] = false;
-        dataState[3] = true;
-        break;
-      case 66:
-        dataState[1] = true;
-        dataState[2] = false;
-        dataState[3] = true;
-        break;
-      case 75:
-        dataState[1] = false;
-        dataState[2] = true;
-        dataState[3] = true;
-        break;
-      case 90:
-        dataState[1] = true;
-        dataState[2] = true;
-        dataState[3] = true;
-        break;
-      default:
-        dataState[0] = false;
-        client.publish("polysenseDebug", "unknown ID");
-        break;
+      switch (inString.toInt()) {
+        case 1:
+          dataState[1] = false;
+          dataState[2] = false;
+          dataState[3] = false;
+          break;
+        case 2:
+          dataState[1] = true;
+          dataState[2] = false;
+          dataState[3] = false;
+          break;
+        case 3:
+          dataState[1] = false;
+          dataState[2] = true;
+          dataState[3] = false;
+          break;
+        case 22:
+          dataState[1] = true;
+          dataState[2] = true;
+          dataState[3] = false;
+          break;
+        case 49:
+          dataState[1] = false;
+          dataState[2] = false;
+          dataState[3] = true;
+          break;
+        case 4:
+          dataState[1] = true;
+          dataState[2] = false;
+          dataState[3] = true;
+          break;
+        case 5:
+          dataState[1] = false;
+          dataState[2] = true;
+          dataState[3] = true;
+          break;
+        case 6:
+          dataState[1] = true;
+          dataState[2] = true;
+          dataState[3] = true;
+          break;
+        default:
+          client.publish("polysenseDebug", "unknown ID");
+        case 0:
+          dataState[0] = false;
+          break;
+      }
+
+    } else if (inString.toInt() == 0 && debug == false) {
+      dataState[0] = false;
+      client.publish("polysenseDebug", "disconnext");
     }
+  } else if ( strcmp(topic, "polysense2") == 0) {
 
-  } else if (inString.toInt() == 0) {
-    dataState[0] = false;
-    client.publish("polysenseDebug", "disconnext");
+    if (inString == "debug") {
+      if (debug == true) {
+        client.publish("polysenseDebug", "debug = false");
+        debug = false;
+      } else {
+        client.publish("polysenseDebug", "debug = true");
+        debug = true;
+      }
+    }
   }
-
 }
 
 void reconnect() {
@@ -175,6 +190,7 @@ void reconnect() {
       client.publish("polysenseDebug", "Online");
       // ... and resubscribe
       client.subscribe("polysense");
+      client.subscribe("polysense2");
     } else {
       Serial.print("failed, rc=");
       Serial.print(client.state());
@@ -213,4 +229,3 @@ void loop() {
     }
   */
 }
-
