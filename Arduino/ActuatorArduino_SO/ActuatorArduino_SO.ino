@@ -195,42 +195,84 @@ void UpdateMQTT() {
   } else if (GlobalVars.connext[0] == 0) {
     GlobalVars.connext[0] = 1;
     switch (4 * dataIn[3] + 2 * dataIn[2] + dataIn[1]) {
-      case 0:
-        GlobalVars.connext[1] = 100;
-        GlobalVars.connext[2] = 100;
-        GlobalVars.connext[3] = 255;
-        break;
-      case 1:
-        GlobalVars.connext[1] = 200;
-        GlobalVars.connext[2] = 255;
-        GlobalVars.connext[3] = 0;
-        break;
-      case 2:
-        GlobalVars.connext[1] = 0;
-        GlobalVars.connext[2] = 255;
-        GlobalVars.connext[3] = 0;
-        break;
-      case 3:
+      case 0: // ID:6
+        /*
+          GlobalVars.connext[1] = 100;
+          GlobalVars.connext[2] = 100;
+          GlobalVars.connext[3] = 255;
+          break;*/
+        WaveOverWall(255, 255, 0);
+        WaveOverWall(255, 200, 50);
+        WaveOverWall(255, 100, 150);
+        WaveOverWall(255, 0, 255);
+        WaveOverWall(200, 50, 255);
+        WaveOverWall(100, 150, 255);
+        WaveOverWall(0, 255, 255);
+        WaveOverWall(50, 255, 200);
+        WaveOverWall(150, 255, 100);
+        WaveOverWall(255, 255, 0);
+        return;
+      case 1: // ID:8
+        /*
+          GlobalVars.connext[1] = 200;
+          GlobalVars.connext[2] = 255;
+          GlobalVars.connext[3] = 0;
+          break;*/
+        for (int j = 0; j < 150; j++) {
+          for (int i = 0; i < NUM_RINGS; i++) {
+
+            LEDRings[i].Animation0State = random(0, 400);
+
+            fill_rainbow( leds[i], 12, j + 15, 15 );
+            fill_rainbow( leds[i] + 12, 24, j + 7, 9 );
+            fill_rainbow( leds[i] + 36, 40, j, 6 );
+            if (j < 75) {
+              fadeLightBy(leds[i], 76, map(j, 0, 75, 255, 0));
+            }
+            else {
+              fadeLightBy(leds[i], 76, map(j, 75, 150, 0, 255));
+            }
+          }
+          FastLED.show();
+        }
+        return;
+      case 2: // ID:14
+        /*
+          GlobalVars.connext[1] = 0;
+          GlobalVars.connext[2] = 255;
+          GlobalVars.connext[3] = 0;
+          break;*/
+        FastLED.clear();
+        curtain(128, 0, 0);
+        curtain(0, 0, 0);
+        return;
+      case 3: // ID:22
         GlobalVars.connext[1] = 0;
         GlobalVars.connext[2] = 0;
         GlobalVars.connext[3] = 255;
         break;
-      case 4:
+      case 4: // ID:49
         GlobalVars.connext[1] = 255;
         GlobalVars.connext[2] = 0;
         GlobalVars.connext[3] = 255;
         break;
-      case 5:
+      case 5: // ID:66
+
         GlobalVars.connext[1] = 255;
         GlobalVars.connext[2] = 127;
         GlobalVars.connext[3] = 0;
         break;
-      case 6:
+
+      case 6: // ID:75
+
         GlobalVars.connext[1] = 0;
         GlobalVars.connext[2] = 255;
         GlobalVars.connext[3] = 127;
         break;
-      case 7:
+
+
+      case 7: // ID:90
+
         GlobalVars.connext[1] = 0;
         GlobalVars.connext[2] = 255;
         GlobalVars.connext[3] = 255;
@@ -465,7 +507,7 @@ void animation0(int LEDindex) {
     }
 
   }
-  
+
 }
 
 bool gReverseDirection = false;
@@ -473,7 +515,7 @@ bool gReverseDirection = false;
 #define SPARKING 140
 
 void animation1(int LEDindex) {
-   
+
   fill_gradient( leds[LEDindex], 0, CHSV(120, 255, 255), 11, CHSV(200, 255, 255), SHORTEST_HUES);
   fill_gradient( leds[LEDindex], 12, CHSV(120, 255, 255), 35, CHSV(200, 255, 255), SHORTEST_HUES);
   fill_gradient( leds[LEDindex], 36, CHSV(120, 255, 255), 75, CHSV(200, 255, 255), SHORTEST_HUES);
@@ -548,13 +590,13 @@ void LoopProtection() {
 }
 
 void PreCalculateRainbow() {
-  
+
   fill_rainbow( leds[16], 12, GlobalVars.brightness + 15, 15 );
   fill_rainbow( leds[16] + 12, 24, GlobalVars.brightness + 7, 9 );
   fill_rainbow( leds[16] + 36, 40, GlobalVars.brightness, 6 );
 
   GlobalVars.brightness += 5;
-  if( GlobalVars.brightness > 255){
+  if ( GlobalVars.brightness > 255) {
     GlobalVars.brightness -= 255;
   }
 
@@ -569,64 +611,64 @@ void WaveOverWall(int R, int G, int B) {
   }
 
 
-  FastLED.clear();
+  //FastLED.clear();
   FastLED.show();
 
   for (int s = 0; s < 7; s++) {
     switch (s) {
       case 0:
         for (int i = 0; i <= 12; i++) {
-          WaveSingle(mapping[0], i, R, G, B);
+          WaveSingle(mapping[0], i, R, G, B, 0);
           FastLED.delay(20);
         }
         FastLED.delay(30);
         break;
       case 1:
         for (int i = 0; i <= 12; i++) {
-          WaveSingle(mapping[1], i, R, G, B);
-          WaveSingle(mapping[2], i, R, G, B);
+          WaveSingle(mapping[1], i, R, G, B, 0);
+          WaveSingle(mapping[2], i, R, G, B, 0);
           FastLED.delay(20);
         }
         FastLED.delay(30);
         break;
       case 2:
         for (int i = 0; i <= 12; i++) {
-          WaveSingle(mapping[3], i, R, G, B);
-          WaveSingle(mapping[4], i, R, G, B);
+          WaveSingle(mapping[3], i, R, G, B, 0);
+          WaveSingle(mapping[4], i, R, G, B, 0);
           FastLED.delay(20);
         }
         FastLED.delay(30);
         break;
       case 3:
         for (int i = 0; i <= 12; i++) {
-          WaveSingle(mapping[5], i, R, G, B);
-          WaveSingle(mapping[6], i, R, G, B);
+          WaveSingle(mapping[5], i, R, G, B, 0);
+          WaveSingle(mapping[6], i, R, G, B, 0);
           FastLED.delay(20);
         }
         FastLED.delay(30);
         break;
       case 4:
         for (int i = 0; i <= 12; i++) {
-          WaveSingle(mapping[7], i, R, G, B);
-          WaveSingle(mapping[8], i, R, G, B);
+          WaveSingle(mapping[7], i, R, G, B, 0);
+          WaveSingle(mapping[8], i, R, G, B, 0);
           FastLED.delay(20);
         }
         FastLED.delay(30);
         break;
       case 5:
         for (int i = 0; i <= 12; i++) {
-          WaveSingle(mapping[9], i, R, G, B);
-          WaveSingle(mapping[10], i, R, G, B);
+          WaveSingle(mapping[9], i, R, G, B, 0);
+          WaveSingle(mapping[10], i, R, G, B, 0);
           FastLED.delay(20);
         }
         FastLED.delay(30);
         break;
       case 6:
         for (int i = 0; i <= 12; i++) {
-          WaveSingle(mapping[11], i, R, G, B);
-          WaveSingle(mapping[12], i, R, G, B);
-          WaveSingle(mapping[13], i, R, G, B);
-          WaveSingle(mapping[14], i, R, G, B);
+          WaveSingle(mapping[11], i, R, G, B, 0);
+          WaveSingle(mapping[12], i, R, G, B, 0);
+          WaveSingle(mapping[13], i, R, G, B, 0);
+          WaveSingle(mapping[14], i, R, G, B, 0);
           FastLED.delay(20);
         }
         //FastLED.delay(100);
@@ -634,9 +676,9 @@ void WaveOverWall(int R, int G, int B) {
     }
   }
 
-
 }
-void WaveSingle(int index, int count, int R, int G, int B) {
+
+void WaveSingle(int index, int count, int R, int G, int B, int direc) {
 
   int k = 0;
   switch (count) {
@@ -661,26 +703,114 @@ void WaveSingle(int index, int count, int R, int G, int B) {
 
   }
 
-  leds[index][count / 2].setRGB(R, G, B);
-  leds[index][12 - count / 2].setRGB(R, G, B);
-  leds[index][12 + count].setRGB(R, G, B);
-  leds[index][36 - count].setRGB(R, G, B);
-  switch (count) {
-    default:
-      leds[index][36 + k].setRGB(R, G, B);
-      leds[index][76 - k].setRGB(R, G, B);
-      k++;
-    case 6:
-    case 12:
-      leds[index][36 + k].setRGB(R, G, B);
-      leds[index][76 - k].setRGB(R, G, B);
-      k++;
-      break;
-    case 0:
-      leds[index][36].setRGB(R, G, B);
-      k++;
-    case 3:
-    case 9:
-      break;
+  if (direc == 0) {
+    leds[index][count / 2].setRGB(R, G, B);
+    leds[index][12 - count / 2].setRGB(R, G, B);
+    leds[index][12 + count].setRGB(R, G, B);
+    leds[index][36 - count].setRGB(R, G, B);
+    switch (count) {
+      default:
+        leds[index][36 + k].setRGB(R, G, B);
+        leds[index][76 - k].setRGB(R, G, B);
+        k++;
+      case 6:
+      case 12:
+        leds[index][36 + k].setRGB(R, G, B);
+        leds[index][76 - k].setRGB(R, G, B);
+        k++;
+        break;
+      case 0:
+        leds[index][36].setRGB(R, G, B);
+        k++;
+      case 3:
+      case 9:
+        break;
+    }
+  } else if (direc == 1) {
+    leds[index][6 + count / 2].setRGB(R, G, B);
+    leds[index][6 - count / 2].setRGB(R, G, B);
+    leds[index][24 + count].setRGB(R, G, B);
+    leds[index][24 - count].setRGB(R, G, B);
+    switch (count) {
+      default:
+        leds[index][54 + k].setRGB(R, G, B);
+        leds[index][54 - k].setRGB(R, G, B);
+        k++;
+      case 6:
+      case 12:
+        leds[index][54 + k].setRGB(R, G, B);
+        leds[index][54 - k].setRGB(R, G, B);
+        k++;
+        leds[index][54 + k].setRGB(R, G, B);
+        leds[index][54 - k].setRGB(R, G, B);
+        k++;
+        leds[index][54 + k].setRGB(R, G, B);
+        break;
+      case 0:
+        leds[index][54].setRGB(R, G, B);
+        k++;
+      case 3:
+      case 9:
+        break;
+    }
   }
+}
+
+void curtain( int R, int G, int B) {
+
+
+
+  FastLED.show();
+
+
+  for (int s = 0; s < 7; s++) {
+    switch (s) {
+      case 0:
+        for (int i = 0; i <= 12; i++) {
+          WaveSingle(mapping[5], i, R, G, B, 1);
+          WaveSingle(mapping[6], i, R, G, B, 0);
+          FastLED.delay(20);
+        }
+        FastLED.delay(30);
+        break;
+      case 1:
+        for (int i = 0; i <= 12; i++) {
+          WaveSingle(mapping[7], i, R, G, B, 0);
+          WaveSingle(mapping[8], i, R, G, B, 0);
+
+
+          WaveSingle(mapping[3], i, R, G, B, 1);
+          WaveSingle(mapping[4], i, R, G, B, 1);
+          FastLED.delay(20);
+        }
+        FastLED.delay(30);
+        break;
+      case 2:
+        for (int i = 0; i <= 12; i++) {
+          WaveSingle(mapping[9], i, R, G, B, 0);
+          WaveSingle(mapping[10], i, R, G, B, 0);
+
+          WaveSingle(mapping[1], i, R, G, B, 1);
+          WaveSingle(mapping[2], i, R, G, B, 1);
+          FastLED.delay(20);
+        }
+        FastLED.delay(30);
+        break;
+      case 3:
+        for (int i = 0; i <= 12; i++) {
+          WaveSingle(mapping[11], i, R, G, B, 0);
+          WaveSingle(mapping[12], i, R, G, B, 0);
+          WaveSingle(mapping[13], i, R, G, B, 0);
+          WaveSingle(mapping[14], i, R, G, B, 0);
+
+          WaveSingle(mapping[0], i, R, G, B, 1);
+          FastLED.delay(20);
+        }
+        FastLED.delay(100);
+
+        break;
+    }
+  }
+
+
 }
